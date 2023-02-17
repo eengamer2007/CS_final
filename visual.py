@@ -23,4 +23,5 @@ class SimulationWindow:
             for y in range(0, len(self.gates[x])):
                 print(self.gates[x][y].gate)
                 self.gates[x][y].gate.draw(x, y, self.canvas)
+                
         self.canvas.update()
