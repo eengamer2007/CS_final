@@ -3,6 +3,9 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Callable
 
+SPACING_GATE = 20
+SPACING_WIRE = 5
+SIZE_GATE = 20
 
 class GateType(Enum):
     GATE1 = "gate1",

@@ -59,16 +59,16 @@ class Window:
 
     def run(self):
         try:
-            gate1 = int(self.gate1amount.get())
-            gate2 = int(self.gate2amount.get())
-            input = int(self.inputamount.get())
+            gate1_count = int(self.gate1amount.get())
+            gate2_count = int(self.gate2amount.get())
+            input_count = int(self.inputamount.get())
         except ValueError:
             messagebox.showerror(
                 "invalid value", "an invalid number was entered into the inputs")
             return
 
         try:
-            res = run(input, gate1, gate2)
+            res = run(input_count, gate1_count, gate2_count)
         except ValueError as x:
             messagebox.showerror("run error", x)
             return

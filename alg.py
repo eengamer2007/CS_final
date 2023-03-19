@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from random import randint, choice
+from rand import pop_random
 
 import gates
 
@@ -56,10 +57,12 @@ def gen_layout(inputs: int, gate: int, outputs: int) -> tuple[list, list]:
 
     while len(open) < inputs:
         # choose random open
-        index = randint(0, len(open) - 1)
-        print(index)
+        #index = randint(0, len(open) - 1)
+        #print(index)
         # pop the open port from the list
-        loc = open.pop(index)
+        #loc = open.pop(index)
+
+        loc = pop_random(open)
 
         print(loc)
 

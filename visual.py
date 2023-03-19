@@ -1,9 +1,5 @@
 from gates import *
 
-SPACING_GATE = 20
-SPACING_WIRE = 5
-SIZE_GATE = 20
-
 
 class SimulationWindow:
     def __init__(self, wires, gates):
@@ -26,7 +22,9 @@ class SimulationWindow:
                 j.gate.draw(y_gate * (SIZE_GATE + SPACING_GATE) + SPACING_GATE,
                             x_gate * (SIZE_GATE + SPACING_GATE) + SPACING_GATE, self.canvas)
                 for wires in j.connections:
-                    print("conn:" + str(wire))
-                    for wire in wires:
+                    print("conn:" + str(wires))
+                    for wire in wires[0]:
+                        self.canvas.create_line(wire[0], wire[1])
+                    for wire in wires[1]:
                         ...
         self.canvas.update()
