@@ -1,19 +1,17 @@
 #!/usr/bin/python3
 
-import tkinter as tk
 from tkinter import messagebox
 
-from gates import *
-from alg import *
-
 import visual
+from alg import *
+from gates import *
 
 
 class Window:
     def __init__(self):
         self.root = tk.Tk()
         self.frame = tk.Frame(self.root)
-        self.grid = self.frame.grid()
+        self.frame.grid()
 
         self.menu()
 

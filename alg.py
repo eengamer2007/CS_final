@@ -1,7 +1,7 @@
-import sys
-import gates
 from dataclasses import dataclass
 from random import randint, choice
+
+import gates
 
 
 @dataclass
@@ -18,7 +18,8 @@ class OutGate:
     connections: tuple[list[(int, int)], list[(int, int)]]
 
 
-def run(inputs: int, gate1: int, gate2: int, gate1_list=gates.gate1_list, gate2_list=gates.gate2_list, output: int = 1) -> dict:
+def run(inputs: int, gate1: int, gate2: int, gate1_list=gates.gate1_list, gate2_list=gates.gate2_list,
+        output: int = 1) -> dict:
     if output > 1:
         raise ValueError("too many outputs")
     if inputs > output + gate2:
@@ -57,6 +58,7 @@ def gen_layout(inputs: int, gate: int, outputs: int) -> tuple[list, list]:
         # choose random open
         index = randint(0, len(open) - 1)
         print(index)
+        # pop the open port from the list
         loc = open.pop(index)
 
         print(loc)
@@ -65,8 +67,6 @@ def gen_layout(inputs: int, gate: int, outputs: int) -> tuple[list, list]:
         if len(layers) < loc[0] + 2:
             layers.append([])
 
-        # pop the open port from the list
-
         layers[loc[0] + 1].append(
             LocalGate(
                 type=gates.GateType.GATE2,
@@ -74,7 +74,7 @@ def gen_layout(inputs: int, gate: int, outputs: int) -> tuple[list, list]:
             )
         )
 
-        new_loc: tuple[int, int] = (loc[0]+1, len(layers[loc[0] + 1]) - 1)
+        new_loc: tuple[int, int] = (loc[0] + 1, len(layers[loc[0] + 1]) - 1)
 
         wires.append((loc, new_loc))
 
@@ -89,13 +89,35 @@ def gen_layout(inputs: int, gate: int, outputs: int) -> tuple[list, list]:
             print(i, ":", layers[i])
         print("wires:", wires)
         print()
+
+    # add the inputs
+    for loc in open:
+
+        if len(layers) < loc[0] + 2:
+            layers.append([])
+
+        layers[loc[0] + 1].append(
+            LocalGate(
+                type=gates.GateType.INPUT,
+                connections=([], [loc])
+            )
+        )
+
+        new_loc: tuple[int, int] = (loc[0] + 1, len(layers[loc[0] + 1]) - 1)
+
+        wires.append((loc, new_loc))
+
+        layers[loc[0]][loc[1]].connections[0].append(new_loc)
+
     return (wires, layers)
+
 
 # add extra ports
 
 
 def add_extra(wires, layout):
     return (wires, layout)
+
 
 # set the types of the gates
 
@@ -104,29 +126,29 @@ def fill_gates(layout):
     print(layout)
     print("call fill gates")
     out = []
-    for x in range(0, len(layout) - 1):
+    for x, i in enumerate(layout):
         print(x)
-        print("l",len(layout[x]))
+        print("l", len(layout[x]))
         out.append([])
-        for y in range(0, len(layout[x])):
-            print(" ",y)
+        for y, j in enumerate(i):
+            print(" ", y)
             out[x].append("thing")
-            print(layout[x][y])
-            match layout[x][y].type:
+            print(j)
+            match j.type:
                 case gates.GateType.GATE1:
                     print("gate 1")
                     out[x][y] = OutGate(gate=choice(gates.gate1_list),
-                                connections=layout[x][y].connections)
+                                        connections=j.connections)
                 case gates.GateType.GATE2:
                     print("gate2")
                     out[x][y] = OutGate(gate=choice(gates.gate2_list),
-                                connections=layout[x][y].connections)
+                                        connections=j.connections)
                 case gates.GateType.INPUT:
                     print("input")
-                    out[x][y] = OutGate(gate=gates.input_gate, connections=layout[x][y].connections)
+                    out[x][y] = OutGate(gate=gates.input_gate, connections=j.connections)
                 case gates.GateType.OUTPUT:
                     print("output")
-                    out[x][y] = OutGate(gate=gates.output_gate, connections=layout[x][y].connections)
+                    out[x][y] = OutGate(gate=gates.output_gate, connections=j.connections)
     print(out)
     return out
 
